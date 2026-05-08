@@ -2,5 +2,8 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/AI/.venv/bin/python",
   "python.analysis.extraPaths": ["${workspaceFolder}/AI"],
   "python.terminal.activateEnvironment": true,
-  "jupyter.notebookFileRoot": "${workspaceFolder}/AI"
+  "jupyter.notebookFileRoot": "${workspaceFolder}/AI",
+  "cursorpyright.analysis.extraPaths": [
+    "${workspaceFolder}/AI"
+  ]
 }

@@ -18,7 +18,7 @@ dependencies = [
     "openai",
     "anthropic",
     "groq",
-    "google-generativeai",
+    "langchain-google-genai",
     "cohere",
     "pydantic",
     "pydantic-settings",
