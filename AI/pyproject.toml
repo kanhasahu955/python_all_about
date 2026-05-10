@@ -25,6 +25,7 @@ dependencies = [
     "python-dotenv",
     "ipykernel",
     "jupyter",
+    "streamlit"
 ]
 
 [build-system]
