@@ -25,7 +25,8 @@ dependencies = [
     "python-dotenv",
     "ipykernel",
     "jupyter",
-    "streamlit"
+    "streamlit",
+    "langchain-ollama"
 ]
 
 [build-system]
