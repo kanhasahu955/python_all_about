@@ -37,6 +37,15 @@ class Settings(BaseSettings):
     COHERE_API_KEY: SecretStr | None = None
     DEEPSEEK_API_KEY: SecretStr | None = None
 
+    SERPER_API_KEY: SecretStr | None = Field(
+        default=None,
+        description="Serper.dev key for Google search tools (e.g. GoogleSerperResults).",
+    )
+    TAVILY_API_KEY: SecretStr | None = Field(
+        default=None,
+        description="Tavily API key for web search tools.",
+    )
+
     LANGSMITH_API_KEY: SecretStr | None = None
     LANGSMITH_TRACING: bool = Field(default=False)
     LANGSMITH_PROJECT: str = Field(default="default")
@@ -57,6 +66,8 @@ class Settings(BaseSettings):
             "HUGGINGFACE_API_KEY": self.HUGGINGFACE_API_KEY,
             "COHERE_API_KEY": self.COHERE_API_KEY,
             "DEEPSEEK_API_KEY": self.DEEPSEEK_API_KEY,
+            "SERPER_API_KEY": self.SERPER_API_KEY,
+            "TAVILY_API_KEY": self.TAVILY_API_KEY,
             "LANGSMITH_API_KEY": self.LANGSMITH_API_KEY,
         }
         for key, value in secret_fields.items():
