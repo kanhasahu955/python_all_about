@@ -1,0 +1,8 @@
+backend/.venv/
+backend/.env
+frontend/.nuxt/
+frontend/node_modules/
+frontend/.output/
+.env
+*.pyc
+__pycache__/

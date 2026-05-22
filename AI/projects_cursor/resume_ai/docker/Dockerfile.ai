@@ -1,0 +1,9 @@
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+COPY docker/scripts/ai_worker.py ./ai_worker.py
+
+EXPOSE 8765
+
+CMD ["python", "ai_worker.py"]

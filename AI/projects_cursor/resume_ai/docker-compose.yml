@@ -1,0 +1,4 @@
+# Delegates to docker/docker-compose.yml — run from repo root: docker compose up -d
+
+include:
+  - path: docker/docker-compose.yml

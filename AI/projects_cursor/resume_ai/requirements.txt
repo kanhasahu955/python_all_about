@@ -1,0 +1,10 @@
+fastapi>=0.110
+uvicorn[standard]>=0.27
+sqlmodel>=0.0.22
+sqlalchemy>=2.0
+pymysql
+rich
+pydantic-settings
+openai>=1.40
+PyJWT>=2.8
+python-dotenv
