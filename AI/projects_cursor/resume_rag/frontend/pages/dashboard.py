@@ -1,27 +1,21 @@
 import streamlit as st
 
-st.title(
-    "Dashboard"
-)
+from services.resume_api import ResumeApi
 
-col1, col2, col3, col4 = st.columns(4)
+st.title("Dashboard")
 
-col1.metric(
-    "Resumes",
-    120
-)
+try:
+    resumes = ResumeApi.list_resumes()
+    analyzed = sum(1 for r in resumes if r.get("status") == "analyzed")
+    queued = sum(1 for r in resumes if r.get("status") in ("queued", "processing"))
 
-col2.metric(
-    "Analyses",
-    90
-)
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Resumes", len(resumes))
+    col2.metric("Analyzed", analyzed)
+    col3.metric("In queue", queued)
 
-col3.metric(
-    "Interviews",
-    56
-)
-
-col4.metric(
-    "RAG Docs",
-    5000
-)
+    if resumes:
+        st.subheader("All resumes")
+        st.dataframe(resumes, use_container_width=True)
+except Exception as exc:
+    st.error(f"Could not load dashboard: {exc}")

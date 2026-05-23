@@ -3,12 +3,16 @@ FROM python:3.12-slim
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y gcc default-libmysqlclient-dev pkg-config \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir uv
 
-COPY requirements.txt .
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-install-project
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY projects_cursor/resume_rag/app ./app
 
-COPY app ./app
+ENV PATH="/app/.venv/bin:$PATH"
+ENV DB_PROVIDER=mysql
+ENV USE_REDIS_QUEUE=true
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

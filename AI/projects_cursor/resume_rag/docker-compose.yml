@@ -1,11 +1,16 @@
 services:
   api:
-    build: .
+    build:
+      context: ../..
+      dockerfile: projects_cursor/resume_rag/dockerfile
     container_name: resume_ai_api
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ../../.env
+    environment:
+      DB_PROVIDER: mysql
+      USE_REDIS_QUEUE: "true"
     depends_on:
       - mysql
       - redis
@@ -13,11 +18,16 @@ services:
       - ./storage:/app/storage
 
   worker:
-    build: .
+    build:
+      context: ../..
+      dockerfile: projects_cursor/resume_rag/dockerfile
     container_name: resume_ai_worker
     command: python -m app.jobs.worker
     env_file:
-      - .env
+      - ../../.env
+    environment:
+      DB_PROVIDER: mysql
+      USE_REDIS_QUEUE: "true"
     depends_on:
       - mysql
       - redis
