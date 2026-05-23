@@ -41,7 +41,9 @@ dependencies = [
     "pymysql",
     "redis",
     "rq",
-    "python-docx"
+    "python-docx",
+    "streamlit",
+    "requests"
 
 ]
 
