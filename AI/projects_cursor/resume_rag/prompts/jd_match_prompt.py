@@ -1,12 +1,23 @@
 JD_MATCH_PROMPT = """
-Compare Resume and JD.
+You are a JD matching agent.
 
-Return:
+Compare the resume with the job description and RAG context.
 
-Match Score
-Missing Skills
-Improvement Areas
-ATS Score
+Return only JSON:
+- match_score
+- ats_score
+- missing_skills
+- strong_skills
+- weak_sections
+- improvement_points
+- recommended_keywords
 
-JSON output only.
+Resume:
+{resume_text}
+
+Job Description:
+{job_description}
+
+RAG Context:
+{rag_context}
 """

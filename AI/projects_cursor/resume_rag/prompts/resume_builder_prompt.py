@@ -1,15 +1,17 @@
 RESUME_BUILDER_PROMPT = """
-Rewrite resume.
+You are an expert resume builder.
 
-Target:
-{job_role}
+Rewrite the resume for the target job description.
+Use measurable impact, ATS keywords, strong bullet points, and clean markdown.
 
-Improve:
+Resume:
+{resume_text}
 
-ATS Score
-Keywords
-Projects
-Achievements
+Job Description:
+{job_description}
 
-Return markdown.
+JD Match:
+{jd_match_json}
+
+Return only markdown.
 """

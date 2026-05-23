@@ -37,7 +37,12 @@ dependencies = [
     "uvicorn",
     "pypdf",
     "pandas",
-    "numpy"
+    "numpy",
+    "pymysql",
+    "redis",
+    "rq",
+    "python-docx"
+
 ]
 
 [build-system]

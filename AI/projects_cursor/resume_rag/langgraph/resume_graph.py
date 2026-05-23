@@ -1,69 +1,41 @@
-from langgraph.graph import StateGraph
+from typing import TypedDict, NotRequired
+from langgraph.graph import StateGraph, END
 
-from agents.resume_parser_agent import ResumeParserAgent
-from agents.skill_extractor_agent import SkillExtractorAgent
-from agents.rag_agent import RAGAgent
-from agents.jd_matcher_agent import JDMatcherAgent
-from agents.resume_builder_agent import ResumeBuilderAgent
-from agents.evaluator_agent import EvaluatorAgent
+from app.agents.resume_parser_agent import ResumeParserAgent
+from app.agents.skill_extractor_agent import SkillExtractorAgent
+from app.agents.rag_agent import RAGAgent
+from app.agents.jd_matcher_agent import JDMatcherAgent
+from app.agents.resume_builder_agent import ResumeBuilderAgent
 
-from langgraph.states import ResumeState
 
-builder = StateGraph(ResumeState)
+class ResumeGraphState(TypedDict):
+    document_id: str
+    file_path: str
+    job_description: NotRequired[str]
+    resume_text: NotRequired[str]
+    skills_json: NotRequired[str]
+    rag_context: NotRequired[str]
+    jd_match_json: NotRequired[str]
+    optimized_resume: NotRequired[str]
 
-builder.add_node(
-    "resume_parser",
-    ResumeParserAgent().execute
-)
 
-builder.add_node(
-    "skill_extractor",
-    SkillExtractorAgent().execute
-)
+def build_resume_graph():
+    graph = StateGraph(ResumeGraphState)
 
-builder.add_node(
-    "rag",
-    RAGAgent().execute
-)
+    graph.add_node("parse_resume", ResumeParserAgent().execute)
+    graph.add_node("extract_skills", SkillExtractorAgent().execute)
+    graph.add_node("rag_search", RAGAgent().execute)
+    graph.add_node("match_jd", JDMatcherAgent().execute)
+    graph.add_node("build_resume", ResumeBuilderAgent().execute)
 
-builder.add_node(
-    "jd_match",
-    JDMatcherAgent().execute
-)
+    graph.set_entry_point("parse_resume")
+    graph.add_edge("parse_resume", "extract_skills")
+    graph.add_edge("extract_skills", "rag_search")
+    graph.add_edge("rag_search", "match_jd")
+    graph.add_edge("match_jd", "build_resume")
+    graph.add_edge("build_resume", END)
 
-builder.add_node(
-    "resume_builder",
-    ResumeBuilderAgent().execute
-)
+    return graph.compile()
 
-builder.add_node(
-    "evaluator",
-    EvaluatorAgent().execute
-)
 
-builder.add_edge(
-    "resume_parser",
-    "skill_extractor"
-)
-
-builder.add_edge(
-    "skill_extractor",
-    "rag"
-)
-
-builder.add_edge(
-    "rag",
-    "jd_match"
-)
-
-builder.add_edge(
-    "jd_match",
-    "resume_builder"
-)
-
-builder.add_edge(
-    "resume_builder",
-    "evaluator"
-)
-
-graph = builder.compile()
+resume_graph = build_resume_graph()
