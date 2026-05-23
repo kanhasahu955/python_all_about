@@ -26,7 +26,18 @@ dependencies = [
     "ipykernel",
     "jupyter",
     "streamlit",
-    "langchain-ollama"
+    "langchain-ollama",
+    "pinecone",
+    "python-multipart",
+    "sqlmodel",
+    "sqlalchemy",
+    "snowflake-sqlalchemy",
+    "snowflake-connector-python",
+    "databricks-sql-connector",
+    "uvicorn",
+    "pypdf",
+    "pandas",
+    "numpy"
 ]
 
 [build-system]
@@ -35,3 +46,5 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["config"]
+
+
