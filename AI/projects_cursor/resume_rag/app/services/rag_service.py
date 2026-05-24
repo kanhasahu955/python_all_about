@@ -1,23 +1,29 @@
 import uuid
 
-from app.core.config import settings
 from app.rag.chunking import chunk_text
-from app.rag.embeddings import get_embedding_model
+from app.rag.embeddings import embeddings_configured, get_embedding_model
 from app.rag.pinecone_store import PineconeStore
 
 
 class RAGService:
     def __init__(self):
         self.store = PineconeStore()
-        self.embeddings = get_embedding_model() if settings.OPENAI_API_KEY else None
+        self.embeddings = get_embedding_model() if embeddings_configured() else None
 
     def index_text(self, document_id: str, text: str):
-        if not self.store.enabled or not self.embeddings:
+        if not self.store.enabled:
             return {
                 "document_id": document_id,
                 "chunks": 0,
                 "indexed": False,
-                "message": "Pinecone/OpenAI not configured; skipping index",
+                "message": "PINECONE_API_KEY is not configured",
+            }
+        if not self.embeddings:
+            return {
+                "document_id": document_id,
+                "chunks": 0,
+                "indexed": False,
+                "message": "OPENAI_API_KEY is required for embeddings",
             }
 
         chunks = chunk_text(text)

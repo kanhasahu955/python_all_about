@@ -24,6 +24,10 @@ try:
     st.metric("Total resumes", len(resumes))
     if resumes:
         st.subheader("Recent uploads")
-        st.dataframe(resumes, use_container_width=True)
+        st.dataframe(resumes, width="stretch")
 except Exception as exc:
-    st.warning(f"Backend not reachable: {exc}. Start API with `uvicorn app.main:app --reload`")
+    st.warning(
+        f"Backend not reachable: {exc}. "
+        "If you just ran `make run`, wait a few seconds and refresh — "
+        "the API may still be starting."
+    )

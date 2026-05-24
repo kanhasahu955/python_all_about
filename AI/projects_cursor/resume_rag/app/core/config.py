@@ -17,6 +17,9 @@ class DBProvider(str, Enum):
 class Settings(BaseSettings):
     APP_NAME: str = "Agentic Resume AI"
 
+    APP_ENV: str = "development"
+    APP_DEBUG: bool = False
+
     # mysql | snowflake | databricks  (set in AI/.env)
     DB_PROVIDER: DBProvider = DBProvider.mysql
 
@@ -33,6 +36,10 @@ class Settings(BaseSettings):
     SNOWFLAKE_SCHEMA: str = "PUBLIC"
     SNOWFLAKE_WAREHOUSE: str | None = None
     SNOWFLAKE_ROLE: str | None = None
+    SNOWFLAKE_REGION: str | None = None
+    SNOWFLAKE_CLOUD: str = "aws"
+    SNOWFLAKE_HOST: str | None = None
+    SNOWFLAKE_LEGACY_LOCATOR: bool = False
 
     DATABRICKS_SERVER_HOSTNAME: str | None = None
     DATABRICKS_HTTP_PATH: str | None = None
@@ -40,12 +47,19 @@ class Settings(BaseSettings):
     DATABRICKS_CATALOG: str = "main"
     DATABRICKS_SCHEMA: str = "default"
 
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
     REDIS_URL: str = "redis://localhost:6379/0"
-    USE_REDIS_QUEUE: bool = False
+    USE_REDIS_QUEUE: bool = True
 
     OPENAI_API_KEY: str | None = None
 
+    GROQ_API_KEY: str | None = None
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+
     PINECONE_API_KEY: str | None = None
+    PINECONE_ENV: str = "us-east-1"
     PINECONE_INDEX_NAME: str = "resume-ai-index"
     PINECONE_NAMESPACE: str = "resumes"
 
@@ -58,6 +72,20 @@ class Settings(BaseSettings):
     def normalize_provider(cls, value):
         if isinstance(value, str):
             return value.strip().lower()
+        return value
+
+    @field_validator("REDIS_URL", mode="before")
+    @classmethod
+    def strip_redis_url(cls, value):
+        if isinstance(value, str):
+            return value.strip()
+        return value
+
+    @field_validator("USE_REDIS_QUEUE", mode="before")
+    @classmethod
+    def parse_bool(cls, value):
+        if isinstance(value, str):
+            return value.strip().lower() in {"1", "true", "yes", "on"}
         return value
 
     @computed_field

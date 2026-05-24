@@ -6,11 +6,25 @@ from services.resume_api import ResumeApi
 
 st.title("Resume Analyzer")
 
-document_id = st.text_input("Document ID")
+try:
+    resumes = ResumeApi.list_resumes()
+except Exception as exc:
+    st.error(f"Could not load resumes: {exc}")
+    resumes = []
 
-if st.button("Get Analysis"):
+document_id = None
+if resumes:
+    options = {f"{r['file_name']} ({r['status']})": r["document_id"] for r in resumes}
+    picked = st.selectbox("Select resume", list(options.keys()))
+    document_id = options[picked]
+
+manual_id = st.text_input("Or enter document ID", value=document_id or "")
+if manual_id:
+    document_id = manual_id
+
+if st.button("Get Analysis", type="primary"):
     if not document_id:
-        st.error("Enter a document ID.")
+        st.error("Select or enter a document ID.")
     else:
         try:
             result = ResumeApi.get_resume(document_id)
@@ -18,7 +32,7 @@ if st.button("Get Analysis"):
             st.write(f"Status: **{result['status']}**")
 
             analysis = result.get("analysis") or {}
-            for key in ("skills_json", "jd_match_json", "optimized_resume"):
+            for key in ("skills_json", "jd_match_json", "optimized_resume", "interview_questions"):
                 value = analysis.get(key)
                 if not value:
                     continue

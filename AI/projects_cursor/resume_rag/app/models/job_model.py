@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Optional
-from sqlmodel import SQLModel, Field
+
+from sqlalchemy import Column, Text
+from sqlmodel import Field, SQLModel
 
 
 class JobStatus(str, Enum):
@@ -15,5 +17,5 @@ class BackgroundJob(SQLModel, table=True):
     job_id: str = Field(index=True, unique=True)
     job_type: str
     status: JobStatus = JobStatus.queued
-    result_json: Optional[str] = None
-    error: Optional[str] = None
+    result_json: Optional[str] = Field(default=None, sa_column=Column(Text))
+    error: Optional[str] = Field(default=None, sa_column=Column(Text))

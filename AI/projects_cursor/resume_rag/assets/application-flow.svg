@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="title2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="sh" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg2)"/>
+  <rect x="40" y="30" width="1520" height="80" rx="16" fill="url(#title2)" filter="url(#sh)"/>
+  <text x="70" y="78" fill="#fff" font-size="28" font-weight="700">Application Flow  Upload to Analysis Complete</text>
+
+  <!-- Swimlanes -->
+  <text x="60" y="150" fill="#64748b" font-size="12" font-weight="700">USER / STREAMLIT</text>
+  <rect x="40" y="160" width="1520" height="120" rx="12" fill="#0f172a" stroke="#1e293b"/>
+  <rect x="80" y="190" width="140" height="60" rx="10" fill="#1d4ed8" filter="url(#sh)"/>
+  <text x="100" y="218" fill="#fff" font-size="12" font-weight="600">Select PDF</text>
+  <text x="100" y="236" fill="#bfdbfe" font-size="10">+ optional JD</text>
+  <rect x="260" y="190" width="140" height="60" rx="10" fill="#1d4ed8" filter="url(#sh)"/>
+  <text x="280" y="218" fill="#fff" font-size="12" font-weight="600">Click Analyze</text>
+  <text x="280" y="236" fill="#bfdbfe" font-size="10">upload_resume.py</text>
+  <rect x="440" y="190" width="160" height="60" rx="10" fill="#166534" filter="url(#sh)"/>
+  <text x="460" y="218" fill="#fff" font-size="12" font-weight="600">Watch Live Feed</text>
+  <text x="460" y="236" fill="#bbf7d0" font-size="10">SSE + agent timeline</text>
+  <rect x="640" y="190" width="160" height="60" rx="10" fill="#166534" filter="url(#sh)"/>
+  <text x="660" y="218" fill="#fff" font-size="12" font-weight="600">See Tokens</text>
+  <text x="660" y="236" fill="#bbf7d0" font-size="10">Groq typing live</text>
+  <rect x="840" y="190" width="160" height="60" rx="10" fill="#166534" filter="url(#sh)"/>
+  <text x="860" y="218" fill="#fff" font-size="12" font-weight="600">View Results</text>
+  <text x="860" y="236" fill="#bbf7d0" font-size="10">Resume Analyzer</text>
+
+  <text x="60" y="320" fill="#64748b" font-size="12" font-weight="700">FASTAPI :8000</text>
+  <rect x="40" y="330" width="1520" height="120" rx="12" fill="#0f172a" stroke="#1e293b"/>
+  <rect x="80" y="360" width="160" height="60" rx="10" fill="#6d28d9" filter="url(#sh)"/>
+  <text x="100" y="388" fill="#fff" font-size="12" font-weight="600">POST /upload</text>
+  <text x="100" y="406" fill="#ddd6fe" font-size="10">save PDF · DB row</text>
+  <rect x="280" y="360" width="160" height="60" rx="10" fill="#6d28d9" filter="url(#sh)"/>
+  <text x="300" y="388" fill="#fff" font-size="12" font-weight="600">Enqueue RQ</text>
+  <text x="300" y="406" fill="#ddd6fe" font-size="10">Redis queue</text>
+  <rect x="480" y="360" width="180" height="60" rx="10" fill="#6d28d9" filter="url(#sh)"/>
+  <text x="500" y="388" fill="#fff" font-size="12" font-weight="600">SSE /stream/analysis</text>
+  <text x="500" y="406" fill="#ddd6fe" font-size="10">subscribe events</text>
+  <rect x="700" y="360" width="160" height="60" rx="10" fill="#6d28d9" filter="url(#sh)"/>
+  <text x="720" y="388" fill="#fff" font-size="12" font-weight="600">Forward events</text>
+  <text x="720" y="406" fill="#ddd6fe" font-size="10">Redis ’ client</text>
+  <rect x="900" y="360" width="160" height="60" rx="10" fill="#6d28d9" filter="url(#sh)"/>
+  <text x="920" y="388" fill="#fff" font-size="12" font-weight="600">GET /resumes/{id}</text>
+  <text x="920" y="406" fill="#ddd6fe" font-size="10">final analysis</text>
+
+  <text x="60" y="490" fill="#64748b" font-size="12" font-weight="700">RQ WORKER + LANGGRAPH</text>
+  <rect x="40" y="500" width="1520" height="160" rx="12" fill="#0f172a" stroke="#1e293b"/>
+  <rect x="70" y="530" width="115" height="55" rx="8" fill="#0c4a6e" stroke="#38bdf8"/>
+  <text x="82" y="555" fill="#e0f2fe" font-size="10" font-weight="600">Parser</text>
+  <text x="82" y="572" fill="#7dd3fc" font-size="9">PDF ’ text</text>
+  <rect x="200" y="530" width="115" height="55" rx="8" fill="#1e3a8a" stroke="#60a5fa"/>
+  <text x="212" y="555" fill="#dbeafe" font-size="10" font-weight="600">Skills</text>
+  <text x="212" y="572" fill="#93c5fd" font-size="9">Groq stream</text>
+  <rect x="330" y="530" width="115" height="55" rx="8" fill="#4c1d95" stroke="#a78bfa"/>
+  <text x="342" y="555" fill="#ede9fe" font-size="10" font-weight="600">RAG</text>
+  <text x="342" y="572" fill="#c4b5fd" font-size="9">Pinecone</text>
+  <rect x="460" y="530" width="115" height="55" rx="8" fill="#831843" stroke="#f472b6"/>
+  <text x="472" y="555" fill="#fce7f3" font-size="10" font-weight="600">JD Match</text>
+  <text x="472" y="572" fill="#fbcfe8" font-size="9">Groq stream</text>
+  <rect x="590" y="530" width="115" height="55" rx="8" fill="#14532d" stroke="#4ade80"/>
+  <text x="602" y="555" fill="#dcfce7" font-size="10" font-weight="600">Builder</text>
+  <text x="602" y="572" fill="#bbf7d0" font-size="9">Groq stream</text>
+  <rect x="720" y="530" width="115" height="55" rx="8" fill="#134e4a" stroke="#2dd4bf"/>
+  <text x="732" y="555" fill="#ccfbf1" font-size="10" font-weight="600">Index</text>
+  <text x="732" y="572" fill="#99f6e4" font-size="9">Pinecone</text>
+  <rect x="870" y="530" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="890" y="555" fill="#f1f5f9" font-size="10" font-weight="600">Publish agent.token events</text>
+  <text x="890" y="572" fill="#94a3b8" font-size="9">each step ’ Redis pub/sub</text>
+  <rect x="1100" y="530" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="1120" y="555" fill="#f1f5f9" font-size="10" font-weight="600">Save AgentRun + Analysis</text>
+  <text x="1120" y="572" fill="#94a3b8" font-size="9">Snowflake / MySQL</text>
+  <line x1="185" y1="557" x2="200" y2="557" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="315" y1="557" x2="330" y2="557" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="445" y1="557" x2="460" y2="557" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="575" y1="557" x2="590" y2="557" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="705" y1="557" x2="720" y2="557" stroke="#64748b" stroke-width="2" marker-end="url(#arr)"/>
+
+  <text x="60" y="710" fill="#64748b" font-size="12" font-weight="700">DATA STORES</text>
+  <rect x="40" y="720" width="1520" height="100" rx="12" fill="#0f172a" stroke="#1e293b"/>
+  <rect x="80" y="745" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="100" y="770" fill="#f8fafc" font-size="11" font-weight="600">storage/resumes/</text>
+  <text x="100" y="787" fill="#94a3b8" font-size="10">PDF files</text>
+  <rect x="310" y="745" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="330" y="770" fill="#f8fafc" font-size="11" font-weight="600">Redis</text>
+  <text x="330" y="787" fill="#94a3b8" font-size="10">queue + live events</text>
+  <rect x="540" y="745" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="560" y="770" fill="#f8fafc" font-size="11" font-weight="600">SQL Database</text>
+  <text x="560" y="787" fill="#94a3b8" font-size="10">documents + analysis</text>
+  <rect x="770" y="745" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="790" y="770" fill="#f8fafc" font-size="11" font-weight="600">Pinecone</text>
+  <text x="790" y="787" fill="#94a3b8" font-size="10">vector search index</text>
+  <rect x="1000" y="745" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="1020" y="770" fill="#f8fafc" font-size="11" font-weight="600">Groq API</text>
+  <text x="1020" y="787" fill="#94a3b8" font-size="10">LLM inference</text>
+  <rect x="1230" y="745" width="200" height="55" rx="8" fill="#172033" stroke="#475569"/>
+  <text x="1250" y="770" fill="#f8fafc" font-size="11" font-weight="600">OpenAI API</text>
+  <text x="1250" y="787" fill="#94a3b8" font-size="10">embeddings only</text>
+
+  <!-- Vertical connectors -->
+  <line x1="150" y1="250" x2="150" y2="360" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="360" y1="250" x2="360" y2="360" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="570" y1="250" x2="570" y2="360" stroke="#4ade80" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="360" y1="420" x2="360" y2="530" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="980" y1="420" x2="980" y2="530" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="980" y1="585" x2="980" y2="745" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+</svg>

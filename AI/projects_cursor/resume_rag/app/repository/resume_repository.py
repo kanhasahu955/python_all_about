@@ -14,7 +14,11 @@ class ResumeRepository:
         return document
 
     def list_documents(self) -> list[ResumeDocument]:
-        return list(self.session.exec(select(ResumeDocument).order_by(ResumeDocument.id.desc())))
+        return list(
+            self.session.exec(
+                select(ResumeDocument).order_by(ResumeDocument.created_at.desc())
+            )
+        )
 
     def get_by_document_id(self, document_id: str) -> ResumeDocument | None:
         return self.session.exec(
@@ -30,6 +34,13 @@ class ResumeRepository:
         doc = self.get_by_document_id(document_id)
         if doc:
             doc.status = status
+            self.session.add(doc)
+            self.session.commit()
+
+    def update_job_id(self, document_id: str, job_id: str):
+        doc = self.get_by_document_id(document_id)
+        if doc:
+            doc.job_id = job_id
             self.session.add(doc)
             self.session.commit()
 

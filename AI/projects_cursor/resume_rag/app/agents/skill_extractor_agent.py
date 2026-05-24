@@ -1,17 +1,19 @@
 import json
 
 from app.agents.base_agent import BaseAgent
-from app.core.config import settings
+from app.core.llm import llm_configured
+from app.core.llm_stream import stream_chat_response
 
 
 class SkillExtractorAgent(BaseAgent):
+    agent_name = "extract_skills"
+
     def execute(self, state):
+        self._start(state)
         resume_text = state.get("resume_text", "")
+        document_id = state.get("document_id")
 
-        if settings.OPENAI_API_KEY:
-            from langchain_openai import ChatOpenAI
-
-            llm = ChatOpenAI(model="gpt-4o-mini", api_key=settings.OPENAI_API_KEY)
+        if llm_configured():
             prompt = f"""
 Extract skills, experience, and education from this resume.
 Return JSON with keys: skills (list), experience (list), education (list).
@@ -19,10 +21,8 @@ Return JSON with keys: skills (list), experience (list), education (list).
 Resume:
 {resume_text}
 """
-            response = llm.invoke(prompt)
-            state["skills_json"] = response.content
+            state["skills_json"] = stream_chat_response(document_id, "extract_skills", prompt)
         else:
-            # Fallback when no API key: basic keyword extraction
             words = [w.strip(".,()") for w in resume_text.split() if len(w) > 3]
             state["skills_json"] = json.dumps({"skills": list(set(words))[:20]})
 

@@ -13,4 +13,9 @@ class ResumeAnalyzeRequest(BaseModel):
 
 class ResumeBuildRequest(BaseModel):
     resume_text: str
-    job_description: str
+    job_description: str = ""
+
+
+class InterviewRequest(BaseModel):
+    skills: str = ""
+    document_id: str | None = None
