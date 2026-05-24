@@ -1,13 +1,19 @@
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import Response
 from sqlmodel import Session
 
 from app.agents.interview_agent import InterviewAgent
 from app.agents.resume_builder_agent import ResumeBuilderAgent
 from app.core.database import get_session
 from app.repository.resume_repository import ResumeRepository
-from app.schemas.resume_schema import InterviewRequest, ResumeBuildRequest
+from app.schemas.resume_schema import (
+    InterviewRequest,
+    ResumeBuildRequest,
+    ResumeExportRequest,
+)
 from app.services.resume_service import ResumeService
 from app.utils.paths import resolve_resume_path
+from app.utils.resume_export import markdown_to_docx_bytes
 
 router = APIRouter()
 
@@ -73,14 +79,35 @@ def get_resume(document_id: str, session: Session = Depends(get_session)):
 
 
 @router.post("/build")
-def build_resume(payload: ResumeBuildRequest):
+def build_resume(payload: ResumeBuildRequest, session: Session = Depends(get_session)):
+    jd_match = ""
+    if payload.document_id:
+        analysis = ResumeRepository(session).get_analysis(payload.document_id)
+        if analysis and analysis.jd_match_json:
+            jd_match = analysis.jd_match_json
+
     state = ResumeBuilderAgent().execute(
         {
             "resume_text": payload.resume_text,
             "job_description": payload.job_description,
+            "jd_match_json": jd_match,
+            "document_id": payload.document_id,
         }
     )
     return {"optimized_resume": state.get("optimized_resume", "")}
+
+
+@router.post("/build/export/docx")
+def export_resume_docx(payload: ResumeExportRequest):
+    if not payload.content.strip():
+        raise HTTPException(status_code=400, detail="Resume content is empty")
+    data = markdown_to_docx_bytes(payload.content)
+    safe_name = payload.file_name.replace(" ", "_").removesuffix(".docx")
+    return Response(
+        content=data,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}.docx"'},
+    )
 
 
 @router.post("/interview")

@@ -14,6 +14,12 @@ class ResumeAnalyzeRequest(BaseModel):
 class ResumeBuildRequest(BaseModel):
     resume_text: str
     job_description: str = ""
+    document_id: str | None = None
+
+
+class ResumeExportRequest(BaseModel):
+    content: str
+    file_name: str = "optimized_resume"
 
 
 class InterviewRequest(BaseModel):

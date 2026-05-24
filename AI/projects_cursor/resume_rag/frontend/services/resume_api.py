@@ -27,14 +27,14 @@ class ResumeApi:
         return ApiClient.get(f"/resumes/{document_id}")
 
     @staticmethod
-    def build_resume(resume_text, job_description=""):
-        return ApiClient.post(
-            "/resumes/build",
-            json={
-                "resume_text": resume_text,
-                "job_description": job_description,
-            },
-        )
+    def build_resume(resume_text, job_description="", document_id=None):
+        payload = {
+            "resume_text": resume_text,
+            "job_description": job_description,
+        }
+        if document_id:
+            payload["document_id"] = document_id
+        return ApiClient.post("/resumes/build", json=payload)
 
     @staticmethod
     def generate_interview(skills="", document_id=None):

@@ -51,6 +51,27 @@ class StreamApi:
                 yield event
 
     @staticmethod
+    def stream_build(resume_text, job_description="", document_id=None):
+        url = f"{API_BASE_URL}/stream/build"
+        payload = {
+            "resume_text": resume_text,
+            "job_description": job_description,
+        }
+        if document_id:
+            payload["document_id"] = document_id
+        with requests.post(url, json=payload, stream=True, timeout=600) as response:
+            if not response.ok:
+                try:
+                    detail = response.json().get("detail", response.text)
+                except Exception:
+                    detail = response.text
+                raise RuntimeError(detail)
+            for line in response.iter_lines(decode_unicode=True):
+                if not line or not line.startswith("data: "):
+                    continue
+                yield line[6:]
+
+    @staticmethod
     def stream_llm(prompt: str):
         url = f"{API_BASE_URL}/stream/llm"
         with requests.post(url, json={"prompt": prompt}, stream=True, timeout=120) as response:

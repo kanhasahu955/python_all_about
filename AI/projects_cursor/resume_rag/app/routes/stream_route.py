@@ -1,9 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from sqlmodel import Session
 
-from app.schemas.resume_schema import InterviewRequest
+from app.core.database import get_session
+from app.repository.resume_repository import ResumeRepository
+from app.schemas.resume_schema import InterviewRequest, ResumeBuildRequest
 from app.services.interview_service import start_interview_session
+from app.services.resume_build_service import build_resume_prompt
 from app.streaming.analysis_stream import analysis_event_stream
 from app.streaming.dashboard_stream import dashboard_event_stream
 from app.streaming.interview_stream import interview_event_stream
@@ -66,6 +70,22 @@ async def stream_interview(session_id: str):
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.post("/build")
+async def stream_build(payload: ResumeBuildRequest, session: Session = Depends(get_session)):
+    jd_match = ""
+    if payload.document_id:
+        analysis = ResumeRepository(session).get_analysis(payload.document_id)
+        if analysis and analysis.jd_match_json:
+            jd_match = analysis.jd_match_json
+
+    prompt = build_resume_prompt(
+        resume_text=payload.resume_text,
+        job_description=payload.job_description,
+        jd_match_json=jd_match,
+    )
+    return create_llm_stream(prompt)
 
 
 @router.post("/llm")
